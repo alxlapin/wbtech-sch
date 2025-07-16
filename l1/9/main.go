@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"time"
 )
 
 func main() {
@@ -13,6 +14,8 @@ func main() {
 	go func() {
 		for i := range ch1 {
 			ch2 <- int(math.Pow(float64(i), 2))
+
+			time.Sleep(time.Second)
 		}
 
 		close(ch2)
