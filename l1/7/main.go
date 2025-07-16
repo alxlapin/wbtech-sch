@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"sync"
-	"time"
 )
 
 func main() {
@@ -13,14 +12,15 @@ func main() {
 
 	for i := 0; i < 1000; i++ {
 		go func() {
-			// При отсутствии мьютекса результат непредсказуемый: зачастую - ошибка "concurrent map writes".
+			// При отсутствии мьютекса результат непредсказуемый: зачастую - ошибка "concurrent map writes"
 			mutex.Lock()
 			m["count"]++
 			mutex.Unlock()
 		}()
 	}
 
-	time.Sleep(2 * time.Second)
-
+	// Если убрать мьютекс при чтении, то запуск команды "go run -race" определит состояние гонки (см. пример в README)
+	mutex.Lock()
 	fmt.Println(m["count"])
+	mutex.Unlock()
 }
